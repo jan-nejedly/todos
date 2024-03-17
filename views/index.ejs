@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title><%= title %></title>
+		<style>
+			*,
+			*::before,
+			*::after {
+				margin: 0;
+				padding: 0;
+				box-sizing: inherit;
+			}
+
+			html {
+				box-sizing: border-box;
+				margin: 20px;
+			}
+
+			a {
+				margin: 2px 8px;
+			}
+
+			ul {
+				list-style: none;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 15px;
+				margin: 20px 0;
+			}
+
+			li {
+				display: flex;
+				flex-direction: column;
+				background-color: sandybrown;
+				border-radius: 8px;
+				padding: 8px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1><%= title %></h1>
+
+		<ul>
+			<% for (const todo of todos) { %>
+			<li>
+				<a href="/todo/<%= todo.id %>"> <%= todo.title %> </a>
+				<a href="/remove-todo/<%= todo.id %>"> odebrat </a>
+				<a href="/toggle-todo/<%= todo.id %>">
+					<%= todo.done ? 'hotovo' : 'nehotovo' %>
+				</a>
+			</li>
+			<% } %>
+		</ul>
+
+		<form method="post" action="/add-todo">
+			<input placeholder="Název todočka" name="title" />
+			<button type="submit">Přidat</button>
+		</form>
+	</body>
+</html>
