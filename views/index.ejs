@@ -18,10 +18,6 @@
 				margin: 20px;
 			}
 
-			a {
-				margin: 2px 8px;
-			}
-
 			ul {
 				list-style: none;
 				display: flex;
@@ -35,7 +31,7 @@
 				flex-direction: column;
 				background-color: sandybrown;
 				border-radius: 8px;
-				padding: 8px;
+				padding: 12px;
 			}
 		</style>
 	</head>
@@ -46,6 +42,7 @@
 			<% for (const todo of todos) { %>
 			<li>
 				<a href="/todo/<%= todo.id %>"> <%= todo.title %> </a>
+				<p>P: <%= todo.priority %></p>
 				<a href="/remove-todo/<%= todo.id %>"> odebrat </a>
 				<a href="/toggle-todo/<%= todo.id %>">
 					<%= todo.done ? 'hotovo' : 'nehotovo' %>

@@ -39,17 +39,24 @@
 				border-radius: 8px;
 				text-decoration: none;
 			}
+
+			label {
+				display: block;
+			}
 		</style>
 	</head>
 	<body>
 		<h1><%= todo.title %></h1>
 		<div class="content">
+			<span>priorita: <%= todo.priority %></span>
 			<a href="/toggle-todo/<%= todo.id %>">
 				<%= todo.done ? 'hotovo' : 'nehotovo' %>
 			</a>
 			<a href="/remove-todo/<%= todo.id %>">odstranit</a>
 			<form method="post" action="/todo/<%= todo.id %>">
+				<label>Upravit název a prioritu:</label>
 				<input placeholder="Nový název todočka" name="title" />
+				<input placeholder="P" name="priority" type="number" max="10" min="0" />
 				<button type="submit">Upravit</button>
 			</form>
 			<a href="/">zpět na seznam</a>

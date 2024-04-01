@@ -65,7 +65,12 @@ app.post("/todo/:id", async (req, res, next) => {
 
 	if (!todo) return next();
 
-	await db("todos").update({ title: req.body.title }).where("id", todo.id);
+	const updateFields = {
+		title: req.body.title !== "" ? req.body.title : todo.title,
+		priority: req.body.priority !== "" ? req.body.priority : todo.priority,
+	};
+
+	await db("todos").update(updateFields).where("id", todo.id);
 
 	res.redirect("back");
 });
