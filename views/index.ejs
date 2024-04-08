@@ -38,22 +38,22 @@
 	<body>
 		<h1><%= title %></h1>
 
-		<ul>
-			<% for (const todo of todos) { %>
-			<li>
-				<a href="/todo/<%= todo.id %>"> <%= todo.title %> </a>
-				<p>P: <%= todo.priority %></p>
-				<a href="/remove-todo/<%= todo.id %>"> odebrat </a>
-				<a href="/toggle-todo/<%= todo.id %>">
-					<%= todo.done ? 'hotovo' : 'nehotovo' %>
-				</a>
-			</li>
-			<% } %>
-		</ul>
+		<div id="todoList"><%- include('_todos') %></div>
 
 		<form method="post" action="/add-todo">
 			<input placeholder="Název todočka" name="title" />
 			<button type="submit">Přidat</button>
 		</form>
+
+		<script>
+			const ws = new WebSocket("ws://localhost:3000");
+			ws.addEventListener("message", (ev) => {
+				const data = JSON.parse(ev.data);
+				if (data.type === "todoList") {
+					const el = document.getElementById("todoList");
+					el.innerHTML = data.html;
+				}
+			});
+		</script>
 	</body>
 </html>
