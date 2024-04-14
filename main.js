@@ -2,6 +2,8 @@ import express from "express";
 import { db, getAllTodos, getTodoById } from "./src/db.js";
 import {
 	createWebSocketServer,
+	sendTodoDeletedToAllConnections,
+	sendTodoDetailToAllConnections,
 	sendTodoListToAllConnections,
 } from "./src/websockets.js";
 
@@ -31,6 +33,8 @@ app.post("/add-todo", async (req, res) => {
 
 	await db("todos").insert({ title });
 
+	sendTodoListToAllConnections();
+
 	res.redirect("/");
 });
 
@@ -42,6 +46,7 @@ app.get("/remove-todo/:id", async (req, res, next) => {
 	await db("todos").delete().where("id", req.params.id);
 
 	sendTodoListToAllConnections();
+	sendTodoDeletedToAllConnections(req.params.id);
 
 	res.redirect("/");
 });
@@ -54,6 +59,7 @@ app.get("/toggle-todo/:id", async (req, res, next) => {
 	await db("todos").update({ done: !todo.done }).where("id", req.params.id);
 
 	sendTodoListToAllConnections();
+	sendTodoDetailToAllConnections(req.params.id);
 
 	res.redirect("back");
 });
@@ -77,6 +83,9 @@ app.post("/todo/:id", async (req, res, next) => {
 	if (req.body.priority) query.update({ priority: req.body.priority });
 
 	await query;
+
+	sendTodoListToAllConnections();
+	sendTodoDetailToAllConnections(todo.id);
 
 	res.redirect("back");
 });

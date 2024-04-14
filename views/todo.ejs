@@ -43,15 +43,16 @@
 			label {
 				display: block;
 			}
+
+			.info {
+				margin-top: 8px;
+			}
 		</style>
 	</head>
 	<body>
-		<h1><%= todo.title %></h1>
 		<div class="content">
-			<span>priorita: <%= todo.priority %></span>
-			<a href="/toggle-todo/<%= todo.id %>">
-				<%= todo.done ? 'hotovo' : 'nehotovo' %>
-			</a>
+			<div id="todoDetail"><%- include('./_todoDetail', { todo: todo }) %></div>
+			<a href="/toggle-todo/<%= todo.id %>">změnit stav</a>
 			<a href="/remove-todo/<%= todo.id %>">odstranit</a>
 			<form method="post" action="/todo/<%= todo.id %>">
 				<label>Upravit název a prioritu:</label>
@@ -60,6 +61,21 @@
 				<button type="submit">Upravit</button>
 			</form>
 			<a href="/">zpět na seznam</a>
+			<script>
+				const ws = new WebSocket("ws://localhost:3000");
+				ws.addEventListener("message", (ev) => {
+					const data = JSON.parse(ev.data);
+					if (String(data.todoId) !== "<%= todo.id %>") return;
+					if (data.type === "todoDetail") {
+						const el = document.getElementById("todoDetail");
+						el.innerHTML = data.html;
+					}
+					if (data.type === "todoDeleted") {
+						alert("TODOčko bylo smazáno.");
+						window.location.href = "http://localhost:3000";
+					}
+				});
+			</script>
 		</div>
 	</body>
 </html>
